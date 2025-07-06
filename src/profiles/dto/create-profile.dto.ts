@@ -25,6 +25,7 @@ export class CreateProfileDto {
   education?: string;
 
   @IsOptional()
-  @IsString()
-  certifications?: string;
+  @IsArray()
+  @IsString({ each: true })
+  certifications?: string[];
 } 

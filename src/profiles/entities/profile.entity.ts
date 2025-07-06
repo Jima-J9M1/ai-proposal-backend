@@ -23,8 +23,8 @@ export class Profile extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   education: string;
 
-  @Column({ type: 'text', nullable: true })
-  certifications: string;
+  @Column({ type: 'text', array: true, default: [] })
+  certifications: string[];
 
   @ManyToOne(() => User, user => user.profiles, { onDelete: 'CASCADE' })
   user: User;

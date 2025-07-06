@@ -24,7 +24,9 @@ export class AuthService {
 
   async login(user: User) {
     // Check if email is verified
+    console.log(">>>>>>>>>>>>> user >>>>>>>>>>>>>>>>>>", user)
     if (!user.isEmailVerified) {
+      console.log(">>>>>>>>>>>>> user >>>>>>>>>>>>>>>>>>", user)
       throw new UnauthorizedException('Please verify your email before logging in');
     }
 

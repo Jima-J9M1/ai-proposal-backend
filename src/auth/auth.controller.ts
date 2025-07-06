@@ -27,11 +27,13 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({ status: 200, description: 'Login successful' })
+  @ApiResponse({ status: 400, description: 'Bad Request - invalid credentials' })
   @ApiResponse({ status: 401, description: 'Unauthorized - invalid credentials' })
   @ApiResponse({ status: 403, description: 'Forbidden - email not verified' })
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Body() loginDto: LoginDto, @Request() req) {
+    console.log(">>>>>>>>>>>>> loginDto >>>>>>>>>>>>>>>>>>", loginDto)
     return this.authService.login(req.user);
   }
 

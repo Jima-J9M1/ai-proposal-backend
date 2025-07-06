@@ -17,6 +17,7 @@ export class ProfilesController {
   @ApiResponse({ status: 400, description: 'Bad request - validation error' })
   @Post()
   create(@Body() createProfileDto: CreateProfileDto, @Request() req) {
+    console.log(">>>>>>>>>>>> createProfileDto >>>>>>>>>>>>",createProfileDto);
     return this.profilesService.create(createProfileDto, req.user.id);
   }
 
