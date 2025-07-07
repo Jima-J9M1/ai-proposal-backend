@@ -5,21 +5,31 @@ import { Proposal, ProposalStatus } from './entities/proposal.entity';
 import { CreateProposalDto } from './dto/create-proposal.dto';
 import { UpdateProposalDto } from './dto/update-proposal.dto';
 import { EnhanceProposalDto } from './dto/enhance-proposal.dto';
+import { UsageService } from '../payments/usage.service';
 
 @Injectable()
 export class ProposalsService {
   constructor(
     @InjectRepository(Proposal)
     private proposalsRepository: Repository<Proposal>,
+    private usageService: UsageService,
   ) {}
 
   async create(createProposalDto: CreateProposalDto, userId: string): Promise<Proposal> {
+    // Check usage limits
+    await this.usageService.checkAndThrowIfLimitReached(userId, 'proposal');
+
     const proposal = this.proposalsRepository.create({
       ...createProposalDto,
       userId,
     });
 
-    return this.proposalsRepository.save(proposal);
+    const savedProposal = await this.proposalsRepository.save(proposal);
+    
+    // Increment usage after successful creation
+    await this.usageService.incrementUsageAfterCreation(userId, 'proposal');
+    
+    return savedProposal;
   }
 
   async findAll(userId: string): Promise<Proposal[]> {

@@ -4,21 +4,31 @@ import { Repository } from 'typeorm';
 import { Profile } from './entities/profile.entity';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UsageService } from '../payments/usage.service';
 
 @Injectable()
 export class ProfilesService {
   constructor(
     @InjectRepository(Profile)
     private profilesRepository: Repository<Profile>,
+    private usageService: UsageService,
   ) {}
 
   async create(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
+    // Check usage limits
+    await this.usageService.checkAndThrowIfLimitReached(userId, 'profile');
+
     const profile = this.profilesRepository.create({
       ...createProfileDto,
       userId,
     });
 
-    return this.profilesRepository.save(profile);
+    const savedProfile = await this.profilesRepository.save(profile);
+    
+    // Increment usage after successful creation
+    await this.usageService.incrementUsageAfterCreation(userId, 'profile');
+    
+    return savedProfile;
   }
 
   async findAll(userId: string): Promise<Profile[]> {

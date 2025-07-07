@@ -1,11 +1,13 @@
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
 import { Profile } from '../../profiles/entities/profile.entity';
 import { Proposal } from '../../proposals/entities/proposal.entity';
+import { Subscription } from '../../subscriptions/entities/subscription.entity';
 
 export enum UserRole {
   USER = 'user',
   ADMIN = 'admin',
+  SUPER_ADMIN = 'super_admin',
 }
 
 @Entity('users')
@@ -52,4 +54,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Proposal, proposal => proposal.user)
   proposals: Proposal[];
+
+  @OneToOne(() => Subscription, subscription => subscription.user)
+  subscription: Subscription;
 } 
