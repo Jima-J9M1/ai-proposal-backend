@@ -1,9 +1,6 @@
 # Use Node.js 18 Alpine image
 FROM node:18-alpine
 
-# Install wait-for-it script and netcat
-RUN apk add --no-cache bash netcat-openbsd
-
 # Set working directory
 WORKDIR /app
 
@@ -23,11 +20,7 @@ RUN npm run build
 RUN npm prune --production
 
 # Expose port
-EXPOSE 3000
+EXPOSE 3001
 
-# Copy wait script
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-
-# Start the application with database wait
-CMD ["/wait-for-it.sh", "postgres", "--", "npm", "run", "start:prod"] 
+# Start the application
+CMD ["npm", "run", "start:prod"]
