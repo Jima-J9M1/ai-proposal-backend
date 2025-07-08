@@ -47,21 +47,9 @@ export class PaymentsController {
     @Res() res: Response,
   ) {
     const signature = req.headers['stripe-signature'] as string;
-    
-    console.log('Webhook received - Body type:', typeof req.body);
-    console.log('Webhook received - Body:', req.body);
-    
-    // Handle different body types
-    let payload: Buffer;
-    if (typeof req.body === 'string') {
-      payload = Buffer.from(req.body, 'utf8');
-    } else if (Buffer.isBuffer(req.body)) {
-      payload = req.body;
-    } else {
-      // If body is an object, convert to string first
-      payload = Buffer.from(JSON.stringify(req.body), 'utf8');
-    }
 
+    // Use the raw body for Stripe signature verification
+    const payload = req.body;
     try {
       await this.paymentsService.handleWebhook(signature, payload);
       res.status(200).send();

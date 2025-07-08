@@ -88,14 +88,12 @@ export class PaymentsService {
   }
 
   async handleWebhook(signature: string, payload: Buffer): Promise<void> {
-    console.log(">>>>>>>>>>>>>> signature >>>>>>>>>>>>>>>>", this.configService.get('stripe.webhookSecret'))
     const event = this.stripe.webhooks.constructEvent(
       payload,
       signature,
       this.configService.get('stripe.webhookSecret'),
     );
 
-    console.log(">>>>>>>>>>>>>> event >>>>>>>>>>>>>>>>", event)
 
     switch (event.type) {
       case 'customer.subscription.created':

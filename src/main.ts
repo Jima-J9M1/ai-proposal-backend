@@ -2,10 +2,17 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
+  // Use raw body parser for Stripe webhook
+  app.use('/api/v1/payments/webhook', bodyParser.raw({ type: '*/*' }));
+
+  // Use json parser for all other routes
+  app.use(bodyParser.json());
+
   // Enable CORS
   app.enableCors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:3000',

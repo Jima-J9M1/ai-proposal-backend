@@ -10,7 +10,6 @@ import { PaymentsModule } from './payments/payments.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { AdminModule } from './admin/admin.module';
 import stripeConfig from './config/stripe.config';
-import { RawBodyMiddleware } from './common/middleware/raw-body.middleware';
 
 @Module({
   imports: [
@@ -40,8 +39,4 @@ import { RawBodyMiddleware } from './common/middleware/raw-body.middleware';
   ],
   controllers: [AppController],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RawBodyMiddleware).forRoutes('*');
-  }
-} 
+export class AppModule {} 
